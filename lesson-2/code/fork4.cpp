@@ -15,7 +15,11 @@ int main(void)
   pid_t ret = pfork();
   if (ret == 0)
   {
-    execl("./child", "./child", NULL);
+    // o execl substitui o processo atual por outro
+    // se execl der "erro", o processo filho deixa de existir
+    // e passa a ser o processo "child" com mesmo PID
+    // usamos o pexecl, que faz o tratamento de erro para nós
+    pexecl("./child", "./child", NULL);
     printf("why doesn't this message show up?\n");
     return EXIT_FAILURE;
   }

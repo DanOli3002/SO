@@ -7,11 +7,13 @@
 
 #include "process.h"
 
-#define NTIMES 20
+#define NTIMES 30
 
 static void Interrupt (int signum)
 {
-    if (signum == SIGINT) {
+    // este if permite que posamos terminar o programa como ambos
+    // SIGINT (Ctrl-C) e SIGTERM (kill -term PID)
+    if (signum == SIGINT || signum == SIGTERM) {
         printf("\nStay calm, I haven't reached %u yet!\n", NTIMES);
     }
     else { 
@@ -28,6 +30,9 @@ int main(void)
     sigemptyset (&sigact.sa_mask);
     sigact.sa_flags = 0;
     psigaction (SIGINT, &sigact, NULL);
+
+    // o sigterm é o sinal quando usamos "kill -term PID"
+    psigaction (SIGTERM, &sigact, NULL);
 
     /* counting */
     printf("PID = %u\n", getpid());
